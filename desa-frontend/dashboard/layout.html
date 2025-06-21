@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <div class="min-h-full">
+        <!-- Navigation -->
+        <nav class="bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <h1 class="text-white text-lg font-bold">Desa Digital</h1>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="ml-10 flex items-baseline space-x-4">
+                                <a href="/dashboard/" class="text-white px-3 py-2 rounded-md text-sm font-medium" id="nav-dashboard">Dashboard</a>
+                                <a href="/dashboard/surat/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" id="nav-surat">Surat</a>
+                                <a href="/dashboard/bantuan/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" id="nav-bantuan">Bantuan Sosial</a>
+                                <a href="/dashboard/penduduk/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium admin-only" id="nav-penduduk">Data Penduduk</a>
+                                <a href="/dashboard/apbdes/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium admin-only" id="nav-apbdes">APBDes</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-4 flex items-center md:ml-6">
+                            <!-- Notifications -->
+                            <button type="button" class="p-1 rounded-full text-gray-400 hover:text-white focus:outline-none">
+                                <span class="sr-only">View notifications</span>
+                                <i class="fas fa-bell"></i>
+                            </button>
+
+                            <!-- Profile dropdown -->
+                            <div class="ml-3 relative">
+                                <div>
+                                    <button type="button" class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none" id="user-menu-button">
+                                        <span class="sr-only">Open user menu</span>
+                                        <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=User" alt="">
+                                    </button>
+                                </div>
+                                <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="user-menu">
+                                    <a href="/dashboard/profile/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
+                                    <a href="/dashboard/settings/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pengaturan</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="logout-button">Keluar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mobile menu button -->
+                    <div class="-mr-2 flex md:hidden">
+                        <button type="button" class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none" id="mobile-menu-button">
+                            <span class="sr-only">Open main menu</span>
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div class="hidden md:hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="/dashboard/" class="text-white block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+                    <a href="/dashboard/surat/" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Surat</a>
+                    <a href="/dashboard/bantuan/" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Bantuan Sosial</a>
+                    <a href="/dashboard/penduduk/" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium admin-only">Data Penduduk</a>
+                    <a href="/dashboard/apbdes/" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium admin-only">APBDes</a>
+                </div>
+                <div class="pt-4 pb-3 border-t border-gray-700">
+                    <div class="flex items-center px-5">
+                        <div class="flex-shrink-0">
+                            <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=User" alt="">
+                        </div>
+                        <div class="ml-3">
+                            <div class="text-base font-medium leading-none text-white" id="mobile-user-name">User Name</div>
+                            <div class="text-sm font-medium leading-none text-gray-400" id="mobile-user-role">Role</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 px-2 space-y-1">
+                        <a href="/dashboard/profile/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Profil</a>
+                        <a href="/dashboard/settings/" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Pengaturan</a>
+                        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700" id="mobile-logout-button">Keluar</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <main>
+            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <!-- Content goes here -->
+                <div id="content">
+                    <!-- This div will be populated by the specific page content -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Set up user data
+            setupUserData();
+
+            // Set up navigation
+            setupNavigation();
+
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        async function setupUserData() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+
+                const userData = await response.json();
+                
+                // Update UI with user data
+                document.getElementById('mobile-user-name').textContent = userData.name;
+                document.getElementById('mobile-user-role').textContent = userData.role;
+
+                // Show/hide admin-only elements
+                const adminOnlyElements = document.querySelectorAll('.admin-only');
+                adminOnlyElements.forEach(element => {
+                    element.style.display = ['admin_desa', 'perangkat_desa'].includes(userData.role) ? 'block' : 'none';
+                });
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                localStorage.removeItem('token');
+                window.location.href = '/login.html';
+            }
+        }
+
+        function setupNavigation() {
+            // Highlight current page in navigation
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('nav a');
+            
+            navLinks.forEach(link => {
+                if (currentPath.includes(link.getAttribute('href'))) {
+                    link.classList.add('bg-gray-800');
+                }
+            });
+        }
+
+        function setupEventListeners() {
+            // Toggle user menu
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenu = document.getElementById('user-menu');
+            
+            userMenuButton?.addEventListener('click', () => {
+                userMenu.classList.toggle('hidden');
+            });
+
+            // Toggle mobile menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton?.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Handle logout
+            const logoutButtons = document.querySelectorAll('#logout-button, #mobile-logout-button');
+            logoutButtons.forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    
+                    try {
+                        await fetch('http://localhost:5000/api/auth/logout', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error during logout:', error);
+                    } finally {
+                        localStorage.removeItem('token');
+                        window.location.href = '/login.html';
+                    }
+                });
+            });
+
+            // Close menus when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userMenuButton?.contains(e.target) && !userMenu?.contains(e.target)) {
+                    userMenu?.classList.add('hidden');
+                }
+                
+                if (!mobileMenuButton?.contains(e.target) && !mobileMenu?.contains(e.target)) {
+                    mobileMenu?.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
