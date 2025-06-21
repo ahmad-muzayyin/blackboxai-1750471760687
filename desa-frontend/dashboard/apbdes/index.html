@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APBDes - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <!-- Include layout -->
+    <div id="layout-content"></div>
+
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Page header -->
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Anggaran Pendapatan dan Belanja Desa
+                </h2>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <button type="button" id="export-btn" class="mr-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-download mr-2"></i>
+                    Export
+                </button>
+                <button type="button" id="new-entry-btn" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800">
+                    <i class="fas fa-plus mr-2"></i>
+                    Tambah Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+            <!-- Total Anggaran -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-wallet text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Total Anggaran
+                                </dt>
+                                <dd class="text-lg font-medium text-gray-900" id="total-anggaran">
+                                    Rp 0
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Realisasi -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-chart-line text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Total Realisasi
+                                </dt>
+                                <dd class="text-lg font-medium text-gray-900" id="total-realisasi">
+                                    Rp 0
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Persentase -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-percentage text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Persentase Realisasi
+                                </dt>
+                                <dd class="text-lg font-medium text-gray-900" id="persentase-realisasi">
+                                    0%
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white shadow rounded-lg mb-8">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <!-- Tahun Anggaran -->
+                    <div>
+                        <label for="tahun" class="block text-sm font-medium text-gray-700">Tahun Anggaran</label>
+                        <select id="tahun" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md">
+                            <!-- Will be populated dynamically -->
+                        </select>
+                    </div>
+
+                    <!-- Kategori -->
+                    <div>
+                        <label for="kategori" class="block text-sm font-medium text-gray-700">Kategori</label>
+                        <select id="kategori" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md">
+                            <option value="">Semua Kategori</option>
+                            <option value="PENDAPATAN">Pendapatan</option>
+                            <option value="BELANJA">Belanja</option>
+                            <option value="PEMBIAYAAN">Pembiayaan</option>
+                        </select>
+                    </div>
+
+                    <!-- Search -->
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700">Cari</label>
+                        <input type="text" id="search" class="mt-1 block w-full border-gray-300 focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md"
+                            placeholder="Cari berdasarkan uraian...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Kode
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Uraian
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Anggaran
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Realisasi
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Selisih
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                %
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Aksi
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="apbdes-table">
+                        <tr>
+                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                                Memuat data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entry Modal -->
+    <div id="entry-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full m-4">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900" id="modal-title">Tambah Data APBDes</h3>
+                </div>
+                <form id="entry-form">
+                    <div class="px-6 py-4 space-y-4">
+                        <!-- Tahun Anggaran -->
+                        <div>
+                            <label for="form-tahun" class="block text-sm font-medium text-gray-700">Tahun Anggaran</label>
+                            <input type="number" id="form-tahun" name="tahun" required min="2000" max="2100"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                        </div>
+
+                        <!-- Kategori & Kode -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="form-kategori" class="block text-sm font-medium text-gray-700">Kategori</label>
+                                <select id="form-kategori" name="kategori" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="PENDAPATAN">Pendapatan</option>
+                                    <option value="BELANJA">Belanja</option>
+                                    <option value="PEMBIAYAAN">Pembiayaan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="form-kode" class="block text-sm font-medium text-gray-700">Kode Rekening</label>
+                                <input type="text" id="form-kode" name="kode" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Uraian -->
+                        <div>
+                            <label for="form-uraian" class="block text-sm font-medium text-gray-700">Uraian</label>
+                            <input type="text" id="form-uraian" name="uraian" required
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                        </div>
+
+                        <!-- Anggaran & Realisasi -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="form-anggaran" class="block text-sm font-medium text-gray-700">Anggaran (Rp)</label>
+                                <input type="number" id="form-anggaran" name="anggaran" required min="0"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="form-realisasi" class="block text-sm font-medium text-gray-700">Realisasi (Rp)</label>
+                                <input type="number" id="form-realisasi" name="realisasi" required min="0"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Keterangan -->
+                        <div>
+                            <label for="form-keterangan" class="block text-sm font-medium text-gray-700">Keterangan</label>
+                            <textarea id="form-keterangan" name="keterangan" rows="3"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"></textarea>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                        <button type="button" id="cancel-entry-btn"
+                            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load layout
+        fetch('/dashboard/layout.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('layout-content').innerHTML = html;
+                // After loading layout, initialize page
+                initializePage();
+            });
+
+        let currentData = [];
+        let editingId = null;
+
+        function initializePage() {
+            // Set up event listeners
+            document.getElementById('new-entry-btn').addEventListener('click', () => showEntryModal());
+            document.getElementById('cancel-entry-btn').addEventListener('click', hideEntryModal);
+            document.getElementById('entry-form').addEventListener('submit', handleEntrySubmit);
+            document.getElementById('export-btn').addEventListener('click', handleExport);
+
+            // Set up filter listeners
+            document.getElementById('tahun').addEventListener('change', loadData);
+            document.getElementById('kategori').addEventListener('change', loadData);
+            document.getElementById('search').addEventListener('input', filterData);
+
+            // Initialize tahun options
+            const currentYear = new Date().getFullYear();
+            const tahunSelect = document.getElementById('tahun');
+            for (let year = currentYear; year >= currentYear - 5; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                tahunSelect.appendChild(option);
+            }
+
+            // Load initial data
+            loadData();
+        }
+
+        async function loadData() {
+            const tahun = document.getElementById('tahun').value;
+            const kategori = document.getElementById('kategori').value;
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/apbdes?tahun=${tahun}&kategori=${kategori}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                currentData = data.items;
+
+                updateSummary(data.summary);
+                renderTable(currentData);
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Terjadi kesalahan saat memuat data');
+            }
+        }
+
+        function updateSummary(summary) {
+            document.getElementById('total-anggaran').textContent = formatCurrency(summary.totalAnggaran);
+            document.getElementById('total-realisasi').textContent = formatCurrency(summary.totalRealisasi);
+            document.getElementById('persentase-realisasi').textContent = 
+                `${((summary.totalRealisasi / summary.totalAnggaran) * 100).toFixed(2)}%`;
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const filteredData = currentData.filter(item => 
+                item.uraian.toLowerCase().includes(searchTerm) ||
+                item.kode.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filteredData);
+        }
+
+        function renderTable(data) {
+            const tableBody = document.getElementById('apbdes-table');
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                            Tidak ada data
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = data.map(item => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${item.kode}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                        ${item.uraian}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${formatCurrency(item.anggaran)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${formatCurrency(item.realisasi)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${formatCurrency(item.anggaran - item.realisasi)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${((item.realisasi / item.anggaran) * 100).toFixed(2)}%
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="editEntry('${item.id}')" class="text-gray-900 hover:text-gray-800 mr-3">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteEntry('${item.id}')" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showEntryModal(data = null) {
+            const modal = document.getElementById('entry-modal');
+            const form = document.getElementById('entry-form');
+            const title = document.getElementById('modal-title');
+
+            if (data) {
+                title.textContent = 'Edit Data APBDes';
+                editingId = data.id;
+                Object.keys(data).forEach(key => {
+                    const input = form.elements[key];
+                    if (input) input.value = data[key];
+                });
+            } else {
+                title.textContent = 'Tambah Data APBDes';
+                editingId = null;
+                form.reset();
+                form.elements.tahun.value = document.getElementById('tahun').value;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function hideEntryModal() {
+            document.getElementById('entry-modal').classList.add('hidden');
+            document.getElementById('entry-form').reset();
+            editingId = null;
+        }
+
+        async function handleEntrySubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.anggaran = parseInt(data.anggaran);
+            data.realisasi = parseInt(data.realisasi);
+
+            try {
+                const url = editingId 
+                    ? `http://localhost:5000/api/apbdes/${editingId}`
+                    : 'http://localhost:5000/api/apbdes';
+                
+                const response = await fetch(url, {
+                    method: editingId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert(editingId ? 'Data berhasil diperbarui' : 'Data berhasil ditambahkan');
+                    hideEntryModal();
+                    loadData();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Gagal menyimpan data');
+                }
+            } catch (error) {
+                console.error('Error saving data:', error);
+                alert('Terjadi kesalahan saat menyimpan data');
+            }
+        }
+
+        async function editEntry(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/apbdes/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                showEntryModal(data);
+            } catch (error) {
+                console.error('Error fetching entry:', error);
+                alert('Terjadi kesalahan saat memuat data');
+            }
+        }
+
+        async function deleteEntry(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/apbdes/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Data berhasil dihapus');
+                    loadData();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Gagal menghapus data');
+                }
+            } catch (error) {
+                console.error('Error deleting entry:', error);
+                alert('Terjadi kesalahan saat menghapus data');
+            }
+        }
+
+        async function handleExport() {
+            const tahun = document.getElementById('tahun').value;
+            const kategori = document.getElementById('kategori').value;
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/apbdes/export?tahun=${tahun}&kategori=${kategori}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Export failed');
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `APBDes_${tahun}${kategori ? '_' + kategori : ''}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                alert('Terjadi kesalahan saat mengexport data');
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+    </script>
+</body>
+</html>
