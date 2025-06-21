@@ -1,5 +1,4 @@
 const prometheus = require('prom-client');
-const logger = require('./loggerManager');
 const config = require('./configManager');
 const eventManager = require('./eventManager');
 
@@ -18,9 +17,9 @@ class MetricsManager {
       this.setupDefaultMetrics();
       this.setupCustomMetrics();
       this.setupEventListeners();
-      logger.info('Metrics manager initialized successfully');
+      console.log('Metrics manager initialized successfully');
     } catch (error) {
-      logger.error('Metrics manager initialization error:', error);
+      console.error('Metrics manager initialization error:', error);
       throw error;
     }
   }
@@ -291,7 +290,7 @@ class MetricsManager {
       // Disk usage (implementation depends on your environment)
       // this.setGauge('system_disk_usage_bytes', diskUsage);
     } catch (error) {
-      logger.error('Error updating system metrics:', error);
+      console.error('Error updating system metrics:', error);
     }
   }
 
@@ -304,7 +303,7 @@ class MetricsManager {
     try {
       return await this.registry.metrics();
     } catch (error) {
-      logger.error('Error collecting metrics:', error);
+      console.error('Error collecting metrics:', error);
       throw error;
     }
   }
