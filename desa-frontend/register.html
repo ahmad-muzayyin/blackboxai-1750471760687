@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h1 class="text-center text-3xl font-bold text-gray-900">Desa Digital</h1>
+            <h2 class="mt-6 text-center text-2xl font-bold text-gray-900">
+                Daftar Akun Baru
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Atau
+                <a href="/login.html" class="font-medium text-gray-900 hover:text-gray-800">
+                    masuk jika sudah memiliki akun
+                </a>
+            </p>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <form class="space-y-6" action="#" method="POST" id="registerForm">
+                    <!-- NIK Input -->
+                    <div>
+                        <label for="nik" class="block text-sm font-medium text-gray-700">
+                            NIK
+                        </label>
+                        <div class="mt-1">
+                            <input id="nik" name="nik" type="text" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                pattern="[0-9]{16}" title="NIK harus 16 digit angka">
+                        </div>
+                    </div>
+
+                    <!-- Full Name Input -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">
+                            Nama Lengkap
+                        </label>
+                        <div class="mt-1">
+                            <input id="name" name="name" type="text" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">
+                            Email
+                        </label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" autocomplete="email" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Phone Input -->
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">
+                            Nomor Telepon
+                        </label>
+                        <div class="mt-1">
+                            <input id="phone" name="phone" type="tel" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">
+                            Password
+                        </label>
+                        <div class="mt-1 relative">
+                            <input id="password" name="password" type="password" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i class="fas fa-eye text-gray-400 hover:text-gray-500"></i>
+                            </button>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            Minimal 8 karakter, kombinasi huruf dan angka
+                        </p>
+                    </div>
+
+                    <!-- Confirm Password Input -->
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+                            Konfirmasi Password
+                        </label>
+                        <div class="mt-1 relative">
+                            <input id="confirmPassword" name="confirmPassword" type="password" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i class="fas fa-eye text-gray-400 hover:text-gray-500"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="flex items-center">
+                        <input id="terms" name="terms" type="checkbox" required
+                            class="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded">
+                        <label for="terms" class="ml-2 block text-sm text-gray-900">
+                            Saya setuju dengan <a href="#" class="font-medium text-gray-900 hover:text-gray-800">syarat dan ketentuan</a>
+                        </label>
+                    </div>
+
+                    <!-- Register Button -->
+                    <div>
+                        <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Daftar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="fixed bottom-4 left-4">
+        <a href="/" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Kembali
+        </a>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function setupPasswordToggle(inputId, toggleId) {
+            document.getElementById(toggleId).addEventListener('click', function() {
+                const input = document.getElementById(inputId);
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        setupPasswordToggle('password', 'togglePassword');
+        setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
+
+        // Handle form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Password dan konfirmasi password tidak cocok');
+                return;
+            }
+
+            const formData = {
+                nik: document.getElementById('nik').value,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                password: password,
+                role: 'warga'
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Registrasi berhasil! Silakan login.');
+                    window.location.href = '/login.html';
+                } else {
+                    alert(data.message || 'Registrasi gagal');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat registrasi');
+            }
+        });
+
+        // NIK validation
+        document.getElementById('nik').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16);
+        });
+
+        // Phone number validation
+        document.getElementById('phone').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+</body>
+</html>
