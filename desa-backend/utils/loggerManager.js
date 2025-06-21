@@ -1,7 +1,6 @@
 const winston = require('winston');
 const path = require('path');
 const config = require('./configManager');
-const metrics = require('./metricsManager');
 
 class LoggerManager {
   constructor() {
@@ -15,7 +14,7 @@ class LoggerManager {
     try {
       this.setupDefaultLogger();
       this.setupCustomLoggers();
-      this.info('Logger manager initialized successfully');
+      console.log('Logger manager initialized successfully');
     } catch (error) {
       console.error('Logger manager initialization error:', error);
       throw error;
@@ -237,7 +236,6 @@ class LoggerManager {
   log(level, message, meta = {}) {
     const startTime = process.hrtime();
     this.defaultLogger.log(level, message, meta);
-    this.trackLog(level, startTime);
   }
 
   error(message, meta = {}) {
@@ -319,24 +317,6 @@ class LoggerManager {
         });
       }
     }
-  }
-
-  /**
-   * Metrics Tracking
-   */
-
-  // Track log metrics
-  trackLog(level, startTime) {
-    const [seconds, nanoseconds] = process.hrtime(startTime);
-    const duration = seconds + nanoseconds / 1e9;
-
-    metrics.observeHistogram('log_operation_duration_seconds', duration, {
-      level
-    });
-
-    metrics.incrementCounter('logs_total', {
-      level
-    });
   }
 
   /**
