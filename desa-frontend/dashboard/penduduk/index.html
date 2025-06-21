@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Penduduk - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <!-- Include layout -->
+    <div id="layout-content"></div>
+
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Page header -->
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Data Penduduk
+                </h2>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <button type="button" id="import-btn" class="mr-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-upload mr-2"></i>
+                    Import
+                </button>
+                <button type="button" id="export-btn" class="mr-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-download mr-2"></i>
+                    Export
+                </button>
+                <button type="button" id="new-penduduk-btn" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800">
+                    <i class="fas fa-plus mr-2"></i>
+                    Tambah Penduduk
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            <!-- Total Penduduk -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-users text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Total Penduduk
+                                </dt>
+                                <dd class="text-lg font-medium text-gray-900" id="total-penduduk">
+                                    0
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Laki-laki -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-male text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Laki-laki
+                                </dt>
+                                <dd class="text-lg font-medium text-gray-900" id="total-laki">
+                                    0
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perempuan -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-female text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Perempuan
+                                </dt>
+                                <dd class="text-lg font-medium text-gray-900" id="total-perempuan">
+                                    0
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KK -->
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-home text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Total KK
+                                </dt>
+                                <dd class="text-lg font-medium text-gray-900" id="total-kk">
+                                    0
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white shadow rounded-lg mb-8">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                    <!-- Search -->
+                    <div class="sm:col-span-2">
+                        <label for="search" class="block text-sm font-medium text-gray-700">Cari</label>
+                        <input type="text" id="search" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                            placeholder="Cari berdasarkan NIK, nama, atau alamat...">
+                    </div>
+
+                    <!-- Filter RT -->
+                    <div>
+                        <label for="rt" class="block text-sm font-medium text-gray-700">RT</label>
+                        <select id="rt" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md">
+                            <option value="">Semua RT</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter RW -->
+                    <div>
+                        <label for="rw" class="block text-sm font-medium text-gray-700">RW</label>
+                        <select id="rw" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md">
+                            <option value="">Semua RW</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                NIK
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nama
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Jenis Kelamin
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Tempat, Tgl Lahir
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Alamat
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Aksi
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="penduduk-table">
+                        <tr>
+                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                                Memuat data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    <button id="prev-page-mobile" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Previous
+                    </button>
+                    <button id="next-page-mobile" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Next
+                    </button>
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Showing <span id="page-start">1</span> to <span id="page-end">10</span> of <span id="total-items">20</span> results
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination" id="pagination">
+                            <!-- Pagination buttons will be inserted here -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full m-4">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Import Data Penduduk</h3>
+                </div>
+                <form id="import-form">
+                    <div class="px-6 py-4">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">File Excel</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <i class="fas fa-file-excel text-gray-400 text-3xl mb-2"></i>
+                                        <div class="flex text-sm text-gray-600">
+                                            <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-gray-500">
+                                                <span>Upload file</span>
+                                                <input id="file-upload" name="file" type="file" class="sr-only" accept=".xlsx,.xls">
+                                            </label>
+                                            <p class="pl-1">atau drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">
+                                            Excel (.xlsx, .xls)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="#" class="text-sm text-gray-900 hover:text-gray-800">
+                                    <i class="fas fa-download mr-1"></i>
+                                    Download template Excel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                        <button type="button" id="cancel-import-btn"
+                            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800">
+                            Import
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Penduduk Form Modal -->
+    <div id="penduduk-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full m-4">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900" id="modal-title">Tambah Penduduk</h3>
+                </div>
+                <form id="penduduk-form">
+                    <div class="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <!-- NIK -->
+                            <div>
+                                <label for="nik" class="block text-sm font-medium text-gray-700">NIK</label>
+                                <input type="text" id="nik" name="nik" required pattern="[0-9]{16}"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                    title="NIK harus 16 digit angka">
+                            </div>
+
+                            <!-- No KK -->
+                            <div>
+                                <label for="no_kk" class="block text-sm font-medium text-gray-700">Nomor KK</label>
+                                <input type="text" id="no_kk" name="no_kk" required pattern="[0-9]{16}"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                    title="Nomor KK harus 16 digit angka">
+                            </div>
+
+                            <!-- Nama -->
+                            <div class="sm:col-span-2">
+                                <label for="nama" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                                <input type="text" id="nama" name="nama" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+
+                            <!-- Tempat & Tanggal Lahir -->
+                            <div>
+                                <label for="tempat_lahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+                                <input type="text" id="tempat_lahir" name="tempat_lahir" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="tanggal_lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+                                <input type="date" id="tanggal_lahir" name="tanggal_lahir" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+
+                            <!-- Jenis Kelamin -->
+                            <div>
+                                <label for="jenis_kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
+                                <select id="jenis_kelamin" name="jenis_kelamin" required
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md">
+                                    <option value="">Pilih Jenis Kelamin</option>
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
+                                </select>
+                            </div>
+
+                            <!-- Agama -->
+                            <div>
+                                <label for="agama" class="block text-sm font-medium text-gray-700">Agama</label>
+                                <select id="agama" name="agama" required
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md">
+                                    <option value="">Pilih Agama</option>
+                                    <option value="ISLAM">Islam</option>
+                                    <option value="KRISTEN">Kristen</option>
+                                    <option value="KATOLIK">Katolik</option>
+                                    <option value="HINDU">Hindu</option>
+                                    <option value="BUDDHA">Buddha</option>
+                                    <option value="KONGHUCU">Konghucu</option>
+                                </select>
+                            </div>
+
+                            <!-- Status Perkawinan -->
+                            <div>
+                                <label for="status_perkawinan" class="block text-sm font-medium text-gray-700">Status Perkawinan</label>
+                                <select id="status_perkawinan" name="status_perkawinan" required
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md">
+                                    <option value="">Pilih Status</option>
+                                    <option value="BELUM_KAWIN">Belum Kawin</option>
+                                    <option value="KAWIN">Kawin</option>
+                                    <option value="CERAI_HIDUP">Cerai Hidup</option>
+                                    <option value="CERAI_MATI">Cerai Mati</option>
+                                </select>
+                            </div>
+
+                            <!-- Pekerjaan -->
+                            <div>
+                                <label for="pekerjaan" class="block text-sm font-medium text-gray-700">Pekerjaan</label>
+                                <input type="text" id="pekerjaan" name="pekerjaan" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+
+                            <!-- Alamat -->
+                            <div class="sm:col-span-2">
+                                <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+                                <textarea id="alamat" name="alamat" rows="3" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"></textarea>
+                            </div>
+
+                            <!-- RT/RW -->
+                            <div>
+                                <label for="rt" class="block text-sm font-medium text-gray-700">RT</label>
+                                <input type="text" id="rt" name="rt" required pattern="[0-9]{3}"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                    title="RT harus 3 digit angka">
+                            </div>
+                            <div>
+                                <label for="rw" class="block text-sm font-medium text-gray-700">RW</label>
+                                <input type="text" id="rw" name="rw" required pattern="[0-9]{3}"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                    title="RW harus 3 digit angka">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                        <button type="button" id="cancel-penduduk-btn"
+                            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load layout
+        fetch('/dashboard/layout.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('layout-content').innerHTML = html;
+                // After loading layout, initialize page
+                initializePage();
+            });
+
+        let currentData = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let editingId = null;
+
+        function initializePage() {
+            // Set up event listeners
+            document.getElementById('import-btn').addEventListener('click', showImportModal);
+            document.getElementById('cancel-import-btn').addEventListener('click', hideImportModal);
+            document.getElementById('import-form').addEventListener('submit', handleImport);
+
+            document.getElementById('new-penduduk-btn').addEventListener('click', () => showPendudukModal());
+            document.getElementById('cancel-penduduk-btn').addEventListener('click', hidePendudukModal);
+            document.getElementById('penduduk-form').addEventListener('submit', handlePendudukSubmit);
+
+            document.getElementById('export-btn').addEventListener('click', handleExport);
+
+            // Set up filter listeners
+            document.getElementById('search').addEventListener('input', filterData);
+            document.getElementById('rt').addEventListener('change', loadData);
+            document.getElementById('rw').addEventListener('change', loadData);
+
+            // Load initial data
+            loadData();
+            loadRtRwOptions();
+        }
+
+        async function loadRtRwOptions() {
+            try {
+                const response = await fetch('http://localhost:5000/api/penduduk/rt-rw', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+
+                const rtSelect = document.getElementById('rt');
+                const rwSelect = document.getElementById('rw');
+
+                data.rt.forEach(rt => {
+                    const option = document.createElement('option');
+                    option.value = rt;
+                    option.textContent = `RT ${rt}`;
+                    rtSelect.appendChild(option);
+                });
+
+                data.rw.forEach(rw => {
+                    const option = document.createElement('option');
+                    option.value = rw;
+                    option.textContent = `RW ${rw}`;
+                    rwSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Error loading RT/RW options:', error);
+            }
+        }
+
+        async function loadData() {
+            const rt = document.getElementById('rt').value;
+            const rw = document.getElementById('rw').value;
+            const searchTerm = document.getElementById('search').value;
+
+            try {
+                const response = await fetch(
+                    `http://localhost:5000/api/penduduk?page=${currentPage}&limit=${itemsPerPage}&rt=${rt}&rw=${rw}&search=${searchTerm}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    }
+                );
+                const data = await response.json();
+                currentData = data.items;
+
+                updateStatistics(data.statistics);
+                renderTable(currentData);
+                updatePagination(data.total);
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Terjadi kesalahan saat memuat data');
+            }
+        }
+
+        function updateStatistics(stats) {
+            document.getElementById('total-penduduk').textContent = stats.total;
+            document.getElementById('total-laki').textContent = stats.totalLaki;
+            document.getElementById('total-perempuan').textContent = stats.totalPerempuan;
+            document.getElementById('total-kk').textContent = stats.totalKK;
+        }
+
+        function filterData() {
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(loadData, 500);
+        }
+
+        function renderTable(data) {
+            const tableBody = document.getElementById('penduduk-table');
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                            Tidak ada data
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = data.map(item => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${item.nik}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${item.nama}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${item.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${item.tempat_lahir}, ${formatDate(item.tanggal_lahir)}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                        ${item.alamat}<br>
+                        <span class="text-gray-500">RT ${item.rt} / RW ${item.rw}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${formatStatus(item.status)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="editPenduduk('${item.id}')" class="text-gray-900 hover:text-gray-800 mr-3">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deletePenduduk('${item.id}')" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updatePagination(total) {
+            const totalPages = Math.ceil(total / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, total);
+
+            document.getElementById('page-start').textContent = start;
+            document.getElementById('page-end').textContent = end;
+            document.getElementById('total-items').textContent = total;
+
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = `
+                <button onclick="changePage(${currentPage - 1})" 
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    ${currentPage === 1 ? 'disabled' : ''}>
+                    <span class="sr-only">Previous</span>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                ${Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .map(page => `
+                        <button onclick="changePage(${page})"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
+                                page === currentPage 
+                                    ? 'text-gray-900 bg-gray-100' 
+                                    : 'text-gray-700 hover:bg-gray-50'
+                            }">
+                            ${page}
+                        </button>
+                    `).join('')}
+                <button onclick="changePage(${currentPage + 1})"
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    ${currentPage === totalPages ? 'disabled' : ''}>
+                    <span class="sr-only">Next</span>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+
+            // Update mobile pagination buttons
+            document.getElementById('prev-page-mobile').disabled = currentPage === 1;
+            document.getElementById('next-page-mobile').disabled = currentPage === totalPages;
+        }
+
+        function changePage(page) {
+            if (page < 1) return;
+            currentPage = page;
+            loadData();
+        }
+
+        function showImportModal() {
+            document.getElementById('import-modal').classList.remove('hidden');
+        }
+
+        function hideImportModal() {
+            document.getElementById('import-modal').classList.add('hidden');
+            document.getElementById('import-form').reset();
+        }
+
+        function showPendudukModal(data = null) {
+            const modal = document.getElementById('penduduk-modal');
+            const form = document.getElementById('penduduk-form');
+            const title = document.getElementById('modal-title');
+
+            if (data) {
+                title.textContent = 'Edit Data Penduduk';
+                editingId = data.id;
+                Object.keys(data).forEach(key => {
+                    const input = form.elements[key];
+                    if (input) input.value = data[key];
+                });
+            } else {
+                title.textContent = 'Tambah Penduduk';
+                editingId = null;
+                form.reset();
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function hidePendudukModal() {
+            document.getElementById('penduduk-modal').classList.add('hidden');
+            document.getElementById('penduduk-form').reset();
+            editingId = null;
+        }
+
+        async function handlePendudukSubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const url = editingId 
+                    ? `http://localhost:5000/api/penduduk/${editingId}`
+                    : 'http://localhost:5000/api/penduduk';
+                
+                const response = await fetch(url, {
+                    method: editingId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert(editingId ? 'Data berhasil diperbarui' : 'Data berhasil ditambahkan');
+                    hidePendudukModal();
+                    loadData();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Gagal menyimpan data');
+                }
+            } catch (error) {
+                console.error('Error saving data:', error);
+                alert('Terjadi kesalahan saat menyimpan data');
+            }
+        }
+
+        async function handleImport(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/penduduk/import', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Data berhasil diimport');
+                    hideImportModal();
+                    loadData();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Gagal mengimport data');
+                }
+            } catch (error) {
+                console.error('Error importing data:', error);
+                alert('Terjadi kesalahan saat mengimport data');
+            }
+        }
+
+        async function handleExport() {
+            try {
+                const response = await fetch('http://localhost:5000/api/penduduk/export', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Export failed');
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Data_Penduduk.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                alert('Terjadi kesalahan saat mengexport data');
+            }
+        }
+
+        async function editPenduduk(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/penduduk/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                showPendudukModal(data);
+            } catch (error) {
+                console.error('Error fetching penduduk:', error);
+                alert('Terjadi kesalahan saat memuat data');
+            }
+        }
+
+        async function deletePenduduk(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/penduduk/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Data berhasil dihapus');
+                    loadData();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Gagal menghapus data');
+                }
+            } catch (error) {
+                console.error('Error deleting penduduk:', error);
+                alert('Terjadi kesalahan saat menghapus data');
+            }
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'AKTIF': 'Aktif',
+                'PINDAH': 'Pindah',
+                'MENINGGAL': 'Meninggal'
+            };
+            return statusMap[status] || status;
+        }
