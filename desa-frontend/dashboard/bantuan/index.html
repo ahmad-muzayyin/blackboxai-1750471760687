@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bantuan Sosial - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <!-- Include layout -->
+    <div id="layout-content"></div>
+
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Page header -->
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Program Bantuan Sosial
+                </h2>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <button type="button" id="new-program-btn" class="admin-only ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    <i class="fas fa-plus mr-2"></i>
+                    Tambah Program
+                </button>
+            </div>
+        </div>
+
+        <!-- Program List -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2" id="program-list">
+            <!-- Programs will be inserted here -->
+            <div class="animate-pulse">
+                <div class="bg-white shadow rounded-lg p-6">
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                    <div class="h-3 bg-gray-200 rounded w-2/3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Program Modal -->
+        <div id="program-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full m-4">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">Program Bantuan Baru</h3>
+                    </div>
+                    <form id="program-form">
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- Nama Program -->
+                            <div>
+                                <label for="nama-program" class="block text-sm font-medium text-gray-700">Nama Program</label>
+                                <input type="text" id="nama-program" name="namaProgram" required
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                            </div>
+
+                            <!-- Jenis Program -->
+                            <div>
+                                <label for="jenis-program" class="block text-sm font-medium text-gray-700">Jenis Program</label>
+                                <select id="jenis-program" name="jenisProgram" required
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                                    <option value="">Pilih Jenis Program</option>
+                                    <option value="BLT">Bantuan Langsung Tunai (BLT)</option>
+                                    <option value="PKH">Program Keluarga Harapan (PKH)</option>
+                                    <option value="BPNT">Bantuan Pangan Non Tunai (BPNT)</option>
+                                    <option value="PIP">Program Indonesia Pintar (PIP)</option>
+                                    <option value="KIS">Kartu Indonesia Sehat (KIS)</option>
+                                    <option value="RUTILAHU">Rehabilitasi Sosial Rutilahu</option>
+                                    <option value="LAINNYA">Lainnya</option>
+                                </select>
+                            </div>
+
+                            <!-- Deskripsi -->
+                            <div>
+                                <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                                <textarea id="deskripsi" name="deskripsi" rows="3" required
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"></textarea>
+                            </div>
+
+                            <!-- Periode -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="periode-mulai" class="block text-sm font-medium text-gray-700">Periode Mulai</label>
+                                    <input type="date" id="periode-mulai" name="periodeMulai" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label for="periode-selesai" class="block text-sm font-medium text-gray-700">Periode Selesai</label>
+                                    <input type="date" id="periode-selesai" name="periodeSelesai" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <!-- Kuota & Nilai Manfaat -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="kuota" class="block text-sm font-medium text-gray-700">Kuota Penerima</label>
+                                    <input type="number" id="kuota" name="kuota" min="1" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label for="nilai-manfaat" class="block text-sm font-medium text-gray-700">Nilai Manfaat (Rp)</label>
+                                    <input type="number" id="nilai-manfaat" name="nilaiManfaat" min="0" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <!-- Kriteria -->
+                            <div>
+                                <label for="kriteria" class="block text-sm font-medium text-gray-700">Kriteria Penerima</label>
+                                <textarea id="kriteria" name="kriteria" rows="3" required
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                    placeholder="Masukkan kriteria penerima bantuan, satu per baris"></textarea>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                            <button type="button" id="cancel-program-btn"
+                                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                Batal
+                            </button>
+                            <button type="submit"
+                                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load layout
+        fetch('/dashboard/layout.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('layout-content').innerHTML = html;
+                // After loading layout, initialize page
+                initializePage();
+            });
+
+        function initializePage() {
+            // Set up event listeners
+            document.getElementById('new-program-btn')?.addEventListener('click', showProgramModal);
+            document.getElementById('cancel-program-btn')?.addEventListener('click', hideProgramModal);
+            document.getElementById('program-form')?.addEventListener('submit', handleProgramSubmit);
+
+            // Load programs
+            loadPrograms();
+
+            // Check user role
+            checkUserRole();
+        }
+
+        async function checkUserRole() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const userData = await response.json();
+
+                // Show/hide admin elements
+                const adminElements = document.querySelectorAll('.admin-only');
+                adminElements.forEach(el => {
+                    el.style.display = ['admin_desa', 'perangkat_desa'].includes(userData.role) ? 'block' : 'none';
+                });
+            } catch (error) {
+                console.error('Error checking user role:', error);
+            }
+        }
+
+        async function loadPrograms() {
+            try {
+                const response = await fetch('http://localhost:5000/api/bantuan-sosial', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+
+                const programList = document.getElementById('program-list');
+                
+                if (data.items.length === 0) {
+                    programList.innerHTML = `
+                        <div class="col-span-full text-center py-12 bg-white rounded-lg shadow">
+                            <i class="fas fa-info-circle text-gray-400 text-4xl mb-4"></i>
+                            <p class="text-gray-500">Belum ada program bantuan yang tersedia</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                programList.innerHTML = data.items.map(program => `
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">
+                                    ${program.namaProgram}
+                                </h3>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(program.status)}">
+                                    ${formatStatus(program.status)}
+                                </span>
+                            </div>
+                            <p class="text-gray-500 mb-4">${program.deskripsi}</p>
+                            <div class="border-t border-gray-200 pt-4">
+                                <dl class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <dt class="text-sm font-medium text-gray-500">Jenis Program</dt>
+                                        <dd class="mt-1 text-sm text-gray-900">${formatJenisProgram(program.jenisProgram)}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-sm font-medium text-gray-500">Nilai Manfaat</dt>
+                                        <dd class="mt-1 text-sm text-gray-900">Rp ${formatNumber(program.nilaiManfaat)}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-sm font-medium text-gray-500">Periode</dt>
+                                        <dd class="mt-1 text-sm text-gray-900">${formatDate(program.periodeMulai)} - ${formatDate(program.periodeSelesai)}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="text-sm font-medium text-gray-500">Kuota Tersisa</dt>
+                                        <dd class="mt-1 text-sm text-gray-900">${program.kuotaTersisa} dari ${program.kuota}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="mt-6 flex justify-end">
+                                <a href="/dashboard/bantuan/detail.html?id=${program.id}" 
+                                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800">
+                                    Lihat Detail
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading programs:', error);
+                alert('Terjadi kesalahan saat memuat daftar program');
+            }
+        }
+
+        function showProgramModal() {
+            document.getElementById('program-modal').classList.remove('hidden');
+        }
+
+        function hideProgramModal() {
+            document.getElementById('program-modal').classList.add('hidden');
+            document.getElementById('program-form').reset();
+        }
+
+        async function handleProgramSubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = {
+                namaProgram: formData.get('namaProgram'),
+                jenisProgram: formData.get('jenisProgram'),
+                deskripsi: formData.get('deskripsi'),
+                periodeMulai: formData.get('periodeMulai'),
+                periodeSelesai: formData.get('periodeSelesai'),
+                kuota: parseInt(formData.get('kuota')),
+                nilaiManfaat: parseInt(formData.get('nilaiManfaat')),
+                kriteria: formData.get('kriteria').split('\n').filter(k => k.trim())
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/bantuan-sosial', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Program bantuan berhasil ditambahkan');
+                    hideProgramModal();
+                    loadPrograms();
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Gagal menambahkan program bantuan');
+                }
+            } catch (error) {
+                console.error('Error creating program:', error);
+                alert('Terjadi kesalahan saat menambahkan program bantuan');
+            }
+        }
+
+        function formatJenisProgram(jenis) {
+            const jenisMap = {
+                'BLT': 'Bantuan Langsung Tunai',
+                'PKH': 'Program Keluarga Harapan',
+                'BPNT': 'Bantuan Pangan Non Tunai',
+                'PIP': 'Program Indonesia Pintar',
+                'KIS': 'Kartu Indonesia Sehat',
+                'RUTILAHU': 'Rehabilitasi Sosial Rutilahu',
+                'LAINNYA': 'Lainnya'
+            };
+            return jenisMap[jenis] || jenis;
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'DRAFT': 'Draft',
+                'AKTIF': 'Aktif',
+                'SELESAI': 'Selesai',
+                'DIBATALKAN': 'Dibatalkan'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusColor(status) {
+            const colorMap = {
+                'DRAFT': 'bg-gray-100 text-gray-800',
+                'AKTIF': 'bg-green-100 text-green-800',
+                'SELESAI': 'bg-blue-100 text-blue-800',
+                'DIBATALKAN': 'bg-red-100 text-red-800'
+            };
+            return colorMap[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function formatNumber(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+        }
+    </script>
+</body>
+</html>
