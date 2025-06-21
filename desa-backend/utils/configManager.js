@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');
-const logger = require('./loggerManager');
 const eventManager = require('./eventManager');
 
 class ConfigManager {
@@ -18,9 +17,9 @@ class ConfigManager {
       this.loadEnvConfig();
       this.loadConfigFiles();
       this.validateRequiredConfig();
-      logger.info('Config manager initialized successfully');
+      console.log('Config manager initialized successfully');
     } catch (error) {
-      logger.error('Config manager initialization error:', error);
+      console.error('Config manager initialization error:', error);
       throw error;
     }
   }
@@ -35,7 +34,7 @@ class ConfigManager {
     const result = dotenv.config({ path: envPath });
 
     if (result.error) {
-      logger.warn('No .env file found, using environment variables');
+      console.warn('No .env file found, using environment variables');
     }
 
     this.envConfig = process.env;
@@ -120,7 +119,7 @@ class ConfigManager {
         }
       }
     } catch (error) {
-      logger.error('Error loading config files:', error);
+      console.error('Error loading config files:', error);
       throw error;
     }
   }
@@ -260,7 +259,7 @@ class ConfigManager {
 
       this.update(config);
     } catch (error) {
-      logger.error('Error importing configuration:', error);
+      console.error('Error importing configuration:', error);
       throw error;
     }
   }
