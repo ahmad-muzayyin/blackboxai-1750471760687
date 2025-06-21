@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Program Bantuan - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <!-- Include layout -->
+    <div id="layout-content"></div>
+
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Back button -->
+        <div class="mb-6">
+            <a href="/dashboard/bantuan/" class="inline-flex items-center text-gray-900 hover:text-gray-800">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Kembali ke Daftar Program
+            </a>
+        </div>
+
+        <!-- Program Details -->
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+            <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="program-title">Loading...</h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500" id="program-id">ID: Loading...</p>
+                </div>
+                <span id="status-badge" class="px-3 py-1 rounded-full text-sm font-semibold">Loading...</span>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <!-- Jenis Program -->
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Jenis Program</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="jenis-program">Loading...</dd>
+                    </div>
+
+                    <!-- Deskripsi -->
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Deskripsi</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="deskripsi">Loading...</dd>
+                    </div>
+
+                    <!-- Periode -->
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Periode</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="periode">Loading...</dd>
+                    </div>
+
+                    <!-- Kuota & Nilai Manfaat -->
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Kuota & Nilai Manfaat</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="font-medium">Kuota Penerima</p>
+                                    <p id="kuota">Loading...</p>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Nilai Manfaat</p>
+                                    <p id="nilai-manfaat">Loading...</p>
+                                </div>
+                            </div>
+                        </dd>
+                    </div>
+
+                    <!-- Kriteria -->
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Kriteria Penerima</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <ul class="list-disc pl-5 space-y-1" id="kriteria-list">
+                                <li>Loading...</li>
+                            </ul>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Application Section -->
+        <div id="application-section" class="bg-white shadow sm:rounded-lg mb-8">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Pengajuan Bantuan</h3>
+                <div class="mt-2 max-w-xl text-sm text-gray-500">
+                    <p>Ajukan diri Anda sebagai penerima bantuan program ini.</p>
+                </div>
+                <div class="mt-5">
+                    <button type="button" id="apply-btn"
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        Ajukan Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application List (Admin Only) -->
+        <div id="admin-section" class="admin-only bg-white shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Daftar Pengajuan</h3>
+            </div>
+            <div class="border-t border-gray-200">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Pemohon
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Tanggal Pengajuan
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="application-list">
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    Memuat data...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div id="application-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full m-4">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Form Pengajuan Bantuan</h3>
+                </div>
+                <form id="application-form">
+                    <div class="px-6 py-4 space-y-4">
+                        <!-- NIK & Nama (readonly) -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">NIK</label>
+                                <input type="text" id="nik" readonly
+                                    class="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Nama</label>
+                                <input type="text" id="nama" readonly
+                                    class="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-500 sm:text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Alasan -->
+                        <div>
+                            <label for="alasan" class="block text-sm font-medium text-gray-700">Alasan Pengajuan</label>
+                            <textarea id="alasan" name="alasan" rows="3" required
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                placeholder="Jelaskan alasan Anda mengajukan bantuan ini"></textarea>
+                        </div>
+
+                        <!-- Dokumen Pendukung -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Dokumen Pendukung</label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                <div class="space-y-1 text-center">
+                                    <i class="fas fa-upload text-gray-400 text-3xl mb-2"></i>
+                                    <div class="flex text-sm text-gray-600">
+                                        <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-gray-500">
+                                            <span>Upload file</span>
+                                            <input id="file-upload" name="dokumen" type="file" class="sr-only" multiple>
+                                        </label>
+                                        <p class="pl-1">atau drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500">
+                                        PNG, JPG, PDF up to 10MB
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                        <button type="button" id="cancel-application-btn"
+                            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Ajukan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load layout
+        fetch('/dashboard/layout.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('layout-content').innerHTML = html;
+                // After loading layout, initialize page
+                initializePage();
+            });
+
+        let programData = null;
+        let userData = null;
+
+        async function initializePage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const programId = urlParams.get('id');
+
+            if (!programId) {
+                window.location.href = '/dashboard/bantuan/';
+                return;
+            }
+
+            // Load user data
+            await loadUserData();
+
+            // Load program details
+            await loadProgramDetails(programId);
+
+            // Set up event listeners
+            document.getElementById('apply-btn')?.addEventListener('click', showApplicationModal);
+            document.getElementById('cancel-application-btn')?.addEventListener('click', hideApplicationModal);
+            document.getElementById('application-form')?.addEventListener('submit', handleApplicationSubmit);
+        }
+
+        async function loadUserData() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                userData = await response.json();
+
+                // Show/hide admin elements
+                const adminElements = document.querySelectorAll('.admin-only');
+                const isAdmin = ['admin_desa', 'perangkat_desa'].includes(userData.role);
+                adminElements.forEach(el => {
+                    el.style.display = isAdmin ? 'block' : 'none';
+                });
+
+                // Pre-fill application form
+                document.getElementById('nik').value = userData.nik;
+                document.getElementById('nama').value = userData.name;
+
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        async function loadProgramDetails(programId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/bantuan-sosial/${programId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                programData = await response.json();
+
+                // Update page title
+                document.title = `${programData.namaProgram} - Desa Digital`;
+
+                // Update content
+                document.getElementById('program-title').textContent = programData.namaProgram;
+                document.getElementById('program-id').textContent = `ID: ${programData.id}`;
+                document.getElementById('jenis-program').textContent = formatJenisProgram(programData.jenisProgram);
+                document.getElementById('deskripsi').textContent = programData.deskripsi;
+                document.getElementById('periode').textContent = `${formatDate(programData.periodeMulai)} - ${formatDate(programData.periodeSelesai)}`;
+                document.getElementById('kuota').textContent = `${programData.kuotaTersisa} dari ${programData.kuota}`;
+                document.getElementById('nilai-manfaat').textContent = `Rp ${formatNumber(programData.nilaiManfaat)}`;
+
+                // Update status badge
+                const statusBadge = document.getElementById('status-badge');
+                statusBadge.textContent = formatStatus(programData.status);
+                statusBadge.className = `px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(programData.status)}`;
+
+                // Update kriteria list
+                document.getElementById('kriteria-list').innerHTML = programData.kriteria.map(k => 
+                    `<li>${k}</li>`
+                ).join('');
+
+                // Show/hide application section based on status and quota
+                const applicationSection = document.getElementById('application-section');
+                const applyBtn = document.getElementById('apply-btn');
+                
+                if (programData.status !== 'AKTIF' || programData.kuotaTersisa === 0) {
+                    applicationSection.style.display = 'none';
+                } else {
+                    // Check if user has already applied
+                    const hasApplied = await checkUserApplication(programId);
+                    if (hasApplied) {
+                        applyBtn.textContent = 'Sudah Diajukan';
+                        applyBtn.disabled = true;
+                        applyBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    }
+                }
+
+                // Load applications if admin
+                if (['admin_desa', 'perangkat_desa'].includes(userData.role)) {
+                    loadApplications(programId);
+                }
+
+            } catch (error) {
+                console.error('Error loading program details:', error);
+                alert('Terjadi kesalahan saat memuat detail program');
+            }
+        }
+
+        async function checkUserApplication(programId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/bantuan-sosial/${programId}/check-application`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                return data.hasApplied;
+            } catch (error) {
+                console.error('Error checking application:', error);
+                return false;
+            }
+        }
+
+        async function loadApplications(programId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/bantuan-sosial/${programId}/applications`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+
+                const applicationList = document.getElementById('application-list');
+                
+                if (data.items.length === 0) {
+                    applicationList.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                                Belum ada pengajuan
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                applicationList.innerHTML = data.items.map(app => `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${app.pemohon.name}</div>
+                            <div class="text-sm text-gray-500">${app.pemohon.nik}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${formatDate(app.createdAt)}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getApplicationStatusColor(app.status)}">
+                                ${formatApplicationStatus(app.status)}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <button onclick="viewApplication('${app.id}')" class="text-gray-900 hover:text-gray-800">
+                                <i class="fas fa-eye mr-1"></i> Detail
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading applications:', error);
+            }
+        }
+
+        function showApplicationModal() {
+            document.getElementById('application-modal').classList.remove('hidden');
+        }
+
+        function hideApplicationModal() {
+            document.getElementById('application-modal').classList.add('hidden');
+            document.getElementById('application-form').reset();
+        }
+
+        async function handleApplicationSubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            formData.append('programId', new URLSearchParams(window.location.search).get('id'));
+
+            try {
+                const response = await fetch('http://localhost:5000/api/bantuan-sosial/apply', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Pengajuan bantuan berhasil dikirim');
+                    hideApplicationModal();
+                    window.location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Gagal mengirim pengajuan bantuan');
+                }
+            } catch (error) {
+                console.error('Error submitting application:', error);
+                alert('Terjadi kesalahan saat mengirim pengajuan bantuan');
+            }
+        }
+
+        function formatJenisProgram(jenis) {
+            const jenisMap = {
+                'BLT': 'Bantuan Langsung Tunai',
+                'PKH': 'Program Keluarga Harapan',
+                'BPNT': 'Bantuan Pangan Non Tunai',
+                'PIP': 'Program Indonesia Pintar',
+                'KIS': 'Kartu Indonesia Sehat',
+                'RUTILAHU': 'Rehabilitasi Sosial Rutilahu',
+                'LAINNYA': 'Lainnya'
+            };
+            return jenisMap[jenis] || jenis;
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'DRAFT': 'Draft',
+                'AKTIF': 'Aktif',
+                'SELESAI': 'Selesai',
+                'DIBATALKAN': 'Dibatalkan'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusColor(status) {
+            const colorMap = {
+                'DRAFT': 'bg-gray-100 text-gray-800',
+                'AKTIF': 'bg-green-100 text-green-800',
+                'SELESAI': 'bg-blue-100 text-blue-800',
+                'DIBATALKAN': 'bg-red-100 text-red-800'
+            };
+            return colorMap[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        function formatApplicationStatus(status) {
+            const statusMap = {
+                'PENDING': 'Menunggu',
+                'VERIFIKASI': 'Verifikasi',
+                'DISETUJUI': 'Disetujui',
+                'DITOLAK': 'Ditolak',
+                'DIBATALKAN': 'Dibatalkan'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getApplicationStatusColor(status) {
+            const colorMap = {
+                'PENDING': 'bg-yellow-100 text-yellow-800',
+                'VERIFIKASI': 'bg-blue-100 text-blue-800',
+                'DISETUJUI': 'bg-green-100 text-green-800',
+                'DITOLAK': 'bg-red-100 text-red-800',
+                'DIBATALKAN': 'bg-gray-100 text-gray-800'
+            };
+            return colorMap[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function formatNumber(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+        }
+
+        function viewApplication(id) {
+            // TODO: Implement application detail view
+            alert('Detail pengajuan dengan ID: ' + id);
+        }
+    </script>
+</body>
+</html>
