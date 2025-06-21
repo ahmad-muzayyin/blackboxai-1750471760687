@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Surat - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <!-- Include layout -->
+    <div id="layout-content"></div>
+
+    <!-- Detail Content -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Back button -->
+        <div class="mb-6">
+            <a href="/dashboard/surat/" class="inline-flex items-center text-gray-900 hover:text-gray-800">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Kembali ke Daftar Surat
+            </a>
+        </div>
+
+        <!-- Main content -->
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <!-- Header -->
+            <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="surat-title">
+                        Detail Pengajuan Surat
+                    </h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500" id="surat-id">
+                        ID: Loading...
+                    </p>
+                </div>
+                <div id="status-badge" class="px-3 py-1 rounded-full text-sm font-semibold">
+                    Loading...
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="border-t border-gray-200">
+                <dl>
+                    <!-- Jenis Surat -->
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Jenis Surat</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="jenis-surat">Loading...</dd>
+                    </div>
+
+                    <!-- Pemohon -->
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Pemohon</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="pemohon">Loading...</dd>
+                    </div>
+
+                    <!-- Tanggal Pengajuan -->
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Tanggal Pengajuan</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="tanggal">Loading...</dd>
+                    </div>
+
+                    <!-- Keperluan -->
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Keperluan</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" id="keperluan">Loading...</dd>
+                    </div>
+
+                    <!-- Lampiran -->
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Lampiran</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <ul class="border border-gray-200 rounded-md divide-y divide-gray-200" id="lampiran-list">
+                                <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                                    <div class="w-0 flex-1 flex items-center">
+                                        <i class="fas fa-paperclip text-gray-400 mr-2"></i>
+                                        <span class="ml-2 flex-1 w-0 truncate">Loading...</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </dd>
+                    </div>
+
+                    <!-- Status Timeline -->
+                    <div class="bg-white px-4 py-5 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500 mb-4">Status Timeline</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            <div class="flow-root">
+                                <ul class="-mb-8" id="status-timeline">
+                                    <li class="relative pb-8">
+                                        <div class="relative flex space-x-3">
+                                            <div>
+                                                <span class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center ring-8 ring-white">
+                                                    <i class="fas fa-clock text-gray-500"></i>
+                                                </span>
+                                            </div>
+                                            <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                                <div>
+                                                    <p class="text-sm text-gray-500">Loading status timeline...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- Actions -->
+            <div class="px-4 py-5 sm:px-6 border-t border-gray-200">
+                <div class="flex justify-end space-x-3">
+                    <!-- Download button (visible when status is COMPLETED) -->
+                    <button id="download-btn" class="hidden inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <i class="fas fa-download mr-2"></i>
+                        Download Surat
+                    </button>
+
+                    <!-- Cancel button (visible when status is PENDING) -->
+                    <button id="cancel-btn" class="hidden inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <i class="fas fa-times mr-2"></i>
+                        Batalkan Pengajuan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load layout
+        fetch('/dashboard/layout.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('layout-content').innerHTML = html;
+                // After loading layout, initialize detail page
+                initializeDetailPage();
+            });
+
+        async function initializeDetailPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const suratId = urlParams.get('id');
+
+            if (!suratId) {
+                window.location.href = '/dashboard/surat/';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/surat/${suratId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                // Update page title
+                document.title = `${formatJenisSurat(data.jenisSurat)} - Desa Digital`;
+                
+                // Update content
+                document.getElementById('surat-title').textContent = formatJenisSurat(data.jenisSurat);
+                document.getElementById('surat-id').textContent = `ID: ${data.id}`;
+                document.getElementById('jenis-surat').textContent = formatJenisSurat(data.jenisSurat);
+                document.getElementById('pemohon').textContent = data.pemohon.name;
+                document.getElementById('tanggal').textContent = new Date(data.createdAt).toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                document.getElementById('keperluan').textContent = data.keperluan;
+
+                // Update status badge
+                const statusBadge = document.getElementById('status-badge');
+                statusBadge.textContent = formatStatus(data.status);
+                statusBadge.className = `px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(data.status)}`;
+
+                // Update lampiran list
+                const lampiranList = document.getElementById('lampiran-list');
+                if (data.lampiran && data.lampiran.length > 0) {
+                    lampiranList.innerHTML = data.lampiran.map(file => `
+                        <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                            <div class="w-0 flex-1 flex items-center">
+                                <i class="fas fa-paperclip text-gray-400 mr-2"></i>
+                                <span class="ml-2 flex-1 w-0 truncate">${file.name}</span>
+                            </div>
+                            <div class="ml-4 flex-shrink-0">
+                                <a href="${file.url}" target="_blank" class="font-medium text-gray-900 hover:text-gray-800">
+                                    Download
+                                </a>
+                            </div>
+                        </li>
+                    `).join('');
+                } else {
+                    lampiranList.innerHTML = `
+                        <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                            <div class="w-0 flex-1 flex items-center">
+                                <span class="ml-2 flex-1 w-0 truncate">Tidak ada lampiran</span>
+                            </div>
+                        </li>
+                    `;
+                }
+
+                // Update status timeline
+                const timelineContainer = document.getElementById('status-timeline');
+                timelineContainer.innerHTML = data.statusHistory.map((status, index) => `
+                    <li class="relative pb-8 ${index === data.statusHistory.length - 1 ? 'hidden' : ''}">
+                        <div class="relative flex space-x-3">
+                            <div>
+                                <span class="h-8 w-8 rounded-full ${getTimelineIconColor(status.status)} flex items-center justify-center ring-8 ring-white">
+                                    <i class="${getTimelineIcon(status.status)} text-white"></i>
+                                </span>
+                            </div>
+                            <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                <div>
+                                    <p class="text-sm text-gray-500">${formatStatus(status.status)}</p>
+                                    ${status.keterangan ? `<p class="text-sm text-gray-900 mt-1">${status.keterangan}</p>` : ''}
+                                </div>
+                                <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                    <time datetime="${status.timestamp}">${new Date(status.timestamp).toLocaleDateString('id-ID', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}</time>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                `).join('');
+
+                // Show/hide action buttons based on status
+                const downloadBtn = document.getElementById('download-btn');
+                const cancelBtn = document.getElementById('cancel-btn');
+
+                if (data.status === 'COMPLETED') {
+                    downloadBtn.classList.remove('hidden');
+                    downloadBtn.addEventListener('click', () => downloadSurat(data.id));
+                }
+
+                if (data.status === 'PENDING') {
+                    cancelBtn.classList.remove('hidden');
+                    cancelBtn.addEventListener('click', () => cancelSurat(data.id));
+                }
+
+            } catch (error) {
+                console.error('Error loading surat detail:', error);
+                alert('Terjadi kesalahan saat memuat detail surat');
+            }
+        }
+
+        function formatJenisSurat(jenis) {
+            return jenis.split('_').map(word => 
+                word.charAt(0) + word.slice(1).toLowerCase()
+            ).join(' ');
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'PENDING': 'Menunggu',
+                'PROCESSING': 'Diproses',
+                'APPROVED': 'Disetujui',
+                'REJECTED': 'Ditolak',
+                'COMPLETED': 'Selesai'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusColor(status) {
+            const colorMap = {
+                'PENDING': 'bg-yellow-100 text-yellow-800',
+                'PROCESSING': 'bg-blue-100 text-blue-800',
+                'APPROVED': 'bg-green-100 text-green-800',
+                'REJECTED': 'bg-red-100 text-red-800',
+                'COMPLETED': 'bg-gray-100 text-gray-800'
+            };
+            return colorMap[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        function getTimelineIcon(status) {
+            const iconMap = {
+                'PENDING': 'fas fa-clock',
+                'PROCESSING': 'fas fa-cog',
+                'APPROVED': 'fas fa-check',
+                'REJECTED': 'fas fa-times',
+                'COMPLETED': 'fas fa-check-double'
+            };
+            return iconMap[status] || 'fas fa-info';
+        }
+
+        function getTimelineIconColor(status) {
+            const colorMap = {
+                'PENDING': 'bg-yellow-500',
+                'PROCESSING': 'bg-blue-500',
+                'APPROVED': 'bg-green-500',
+                'REJECTED': 'bg-red-500',
+                'COMPLETED': 'bg-gray-500'
+            };
+            return colorMap[status] || 'bg-gray-500';
+        }
+
+        async function downloadSurat(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/surat/${id}/download`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to download surat');
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `surat-${id}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+            } catch (error) {
+                console.error('Error downloading surat:', error);
+                alert('Terjadi kesalahan saat mengunduh surat');
+            }
+        }
+
+        async function cancelSurat(id) {
+            if (!confirm('Apakah Anda yakin ingin membatalkan pengajuan surat ini?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/surat/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Pengajuan surat berhasil dibatalkan');
+                    window.location.href = '/dashboard/surat/';
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Gagal membatalkan pengajuan surat');
+                }
+            } catch (error) {
+                console.error('Error canceling surat:', error);
+                alert('Terjadi kesalahan saat membatalkan pengajuan surat');
+            }
+        }
+    </script>
+</body>
+</html>
