@@ -1,6 +1,4 @@
 const EventEmitter = require('events');
-const logger = require('./loggerManager');
-const metrics = require('./metricsManager');
 
 class EventManager extends EventEmitter {
   constructor() {
@@ -15,9 +13,9 @@ class EventManager extends EventEmitter {
   initialize() {
     try {
       this.setupDefaultHandlers();
-      logger.info('Event manager initialized successfully');
+      console.log('Event manager initialized successfully');
     } catch (error) {
-      logger.error('Event manager initialization error:', error);
+      console.error('Event manager initialization error:', error);
       throw error;
     }
   }
@@ -69,9 +67,9 @@ class EventManager extends EventEmitter {
       });
 
       this.on(eventName, wrappedHandler);
-      logger.debug(`Event handler registered: ${eventName}`);
+      console.debug(`Event handler registered: ${eventName}`);
     } catch (error) {
-      logger.error(`Error registering handler for ${eventName}:`, error);
+      console.error(`Error registering handler for ${eventName}:`, error);
       throw error;
     }
   }
@@ -83,10 +81,10 @@ class EventManager extends EventEmitter {
       if (handlerInfo) {
         this.removeListener(eventName, handlerInfo.handler);
         this.eventHandlers.delete(eventName);
-        logger.debug(`Event handler unregistered: ${eventName}`);
+        console.debug(`Event handler unregistered: ${eventName}`);
       }
     } catch (error) {
-      logger.error(`Error unregistering handler for ${eventName}:`, error);
+      console.error(`Error unregistering handler for ${eventName}:`, error);
       throw error;
     }
   }
@@ -112,17 +110,13 @@ class EventManager extends EventEmitter {
         this.storeEventHistory(eventName, eventData);
       }
 
-      // Track metrics
-      this.trackEvent(eventName, 'emitted', startTime);
-
       // Emit event
       this.emit(eventName, eventData);
 
-      logger.debug(`Event emitted: ${eventName}`, { eventId: eventData.eventId });
+      console.debug(`Event emitted: ${eventName}`, { eventId: eventData.eventId });
       return eventData;
     } catch (error) {
-      this.trackEvent(eventName, 'error');
-      logger.error(`Error emitting event ${eventName}:`, error);
+      console.error(`Error emitting event ${eventName}:`, error);
       throw error;
     }
   }
@@ -157,7 +151,7 @@ class EventManager extends EventEmitter {
 
       this.eventHistory.set(eventName, events);
     } catch (error) {
-      logger.error(`Error storing event history for ${eventName}:`, error);
+      console.error(`Error storing event history for ${eventName}:`, error);
     }
   }
 
@@ -182,103 +176,87 @@ class EventManager extends EventEmitter {
 
   // Handle user created
   async handleUserCreated(data) {
-    logger.info('User created:', data);
-    metrics.incrementCounter('users_total', { action: 'created' });
+    console.info('User created:', data);
   }
 
   // Handle user updated
   async handleUserUpdated(data) {
-    logger.info('User updated:', data);
-    metrics.incrementCounter('users_total', { action: 'updated' });
+    console.info('User updated:', data);
   }
 
   // Handle user deleted
   async handleUserDeleted(data) {
-    logger.info('User deleted:', data);
-    metrics.incrementCounter('users_total', { action: 'deleted' });
+    console.info('User deleted:', data);
   }
 
   // Handle user login
   async handleUserLogin(data) {
-    logger.info('User login:', data);
-    metrics.incrementCounter('user_logins_total');
+    console.info('User login:', data);
   }
 
   // Handle user logout
   async handleUserLogout(data) {
-    logger.info('User logout:', data);
-    metrics.incrementCounter('user_logouts_total');
+    console.info('User logout:', data);
   }
 
   // Handle surat created
   async handleSuratCreated(data) {
-    logger.info('Surat created:', data);
-    metrics.incrementCounter('surat_total', { action: 'created' });
+    console.info('Surat created:', data);
   }
 
   // Handle surat updated
   async handleSuratUpdated(data) {
-    logger.info('Surat updated:', data);
-    metrics.incrementCounter('surat_total', { action: 'updated' });
+    console.info('Surat updated:', data);
   }
 
   // Handle surat status changed
   async handleSuratStatusChanged(data) {
-    logger.info('Surat status changed:', data);
-    metrics.incrementCounter('surat_status_changes_total', { status: data.status });
+    console.info('Surat status changed:', data);
   }
 
   // Handle bantuan created
   async handleBantuanCreated(data) {
-    logger.info('Bantuan created:', data);
-    metrics.incrementCounter('bantuan_total', { action: 'created' });
+    console.info('Bantuan created:', data);
   }
 
   // Handle bantuan updated
   async handleBantuanUpdated(data) {
-    logger.info('Bantuan updated:', data);
-    metrics.incrementCounter('bantuan_total', { action: 'updated' });
+    console.info('Bantuan updated:', data);
   }
 
   // Handle bantuan distributed
   async handleBantuanDistributed(data) {
-    logger.info('Bantuan distributed:', data);
-    metrics.incrementCounter('bantuan_distributed_total');
+    console.info('Bantuan distributed:', data);
   }
 
   // Handle system error
   async handleSystemError(data) {
-    logger.error('System error:', data);
-    metrics.incrementCounter('system_errors_total');
+    console.error('System error:', data);
   }
 
   // Handle system warning
   async handleSystemWarning(data) {
-    logger.warn('System warning:', data);
-    metrics.incrementCounter('system_warnings_total');
+    console.warn('System warning:', data);
   }
 
   // Handle system backup
   async handleSystemBackup(data) {
-    logger.info('System backup:', data);
-    metrics.incrementCounter('system_backups_total');
+    console.info('System backup:', data);
   }
 
   /**
    * Utility Methods
    */
 
-  // Wrap event handler with error handling and metrics
+  // Wrap event handler with error handling
   wrapHandler(eventName, handler) {
     return async (...args) => {
       const startTime = process.hrtime();
 
       try {
         await handler(...args);
-        this.trackEvent(eventName, 'handled', startTime);
       } catch (error) {
-        this.trackEvent(eventName, 'error');
-        logger.error(`Error in event handler ${eventName}:`, error);
+        console.error(`Error in event handler ${eventName}:`, error);
         throw error;
       }
     };
@@ -299,24 +277,6 @@ class EventManager extends EventEmitter {
         .filter(r => r.status === 'rejected')
         .map(r => r.reason)
     };
-  }
-
-  // Track event metrics
-  trackEvent(eventName, status, startTime = null) {
-    if (startTime) {
-      const [seconds, nanoseconds] = process.hrtime(startTime);
-      const duration = seconds + nanoseconds / 1e9;
-
-      metrics.observeHistogram('event_duration_seconds', duration, {
-        event: eventName,
-        status
-      });
-    }
-
-    metrics.incrementCounter('events_total', {
-      event: eventName,
-      status
-    });
   }
 
   /**
