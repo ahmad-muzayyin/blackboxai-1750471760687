@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <!-- Include layout -->
+    <div id="layout-content"></div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboard-content" class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Welcome Section -->
+        <div class="bg-white shadow rounded-lg mb-8 p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4" id="welcome-message">Selamat Datang</h2>
+            <p class="text-gray-600" id="profile-info">Memuat informasi...</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Surat Statistics -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100">
+                        <i class="fas fa-envelope text-blue-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Surat</p>
+                        <p class="text-lg font-semibold text-gray-900" id="surat-count">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bantuan Sosial Statistics -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100">
+                        <i class="fas fa-hands-helping text-green-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Bantuan Sosial</p>
+                        <p class="text-lg font-semibold text-gray-900" id="bantuan-count">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penduduk Statistics (Admin Only) -->
+            <div class="bg-white shadow rounded-lg p-6 admin-only">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100">
+                        <i class="fas fa-users text-purple-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Penduduk</p>
+                        <p class="text-lg font-semibold text-gray-900" id="penduduk-count">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APBDes Statistics (Admin Only) -->
+            <div class="bg-white shadow rounded-lg p-6 admin-only">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100">
+                        <i class="fas fa-chart-pie text-yellow-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">APBDes</p>
+                        <p class="text-lg font-semibold text-gray-900" id="apbdes-amount">Rp 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Aktivitas Terbaru</h3>
+            <div class="space-y-4" id="recent-activities">
+                <p class="text-gray-600">Memuat aktivitas...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load layout
+        fetch('/dashboard/layout.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('layout-content').innerHTML = html;
+                // After loading layout, initialize dashboard
+                initializeDashboard();
+            });
+
+        async function initializeDashboard() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                // Fetch user profile
+                const profileResponse = await fetch('http://localhost:5000/api/auth/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const profileData = await profileResponse.json();
+
+                // Update welcome message
+                document.getElementById('welcome-message').textContent = `Selamat Datang, ${profileData.name}`;
+                document.getElementById('profile-info').textContent = `${profileData.role === 'admin_desa' ? 'Administrator' : 
+                    profileData.role === 'perangkat_desa' ? 'Perangkat Desa' : 'Warga'} | ${profileData.email}`;
+
+                // Show/hide admin elements
+                const isAdmin = ['admin_desa', 'perangkat_desa'].includes(profileData.role);
+                document.querySelectorAll('.admin-only').forEach(el => {
+                    el.style.display = isAdmin ? 'block' : 'none';
+                });
+
+                // Fetch statistics
+                const statsPromises = [
+                    fetch('http://localhost:5000/api/surat/stats', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }),
+                    fetch('http://localhost:5000/api/bantuan-sosial/stats', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    })
+                ];
+
+                if (isAdmin) {
+                    statsPromises.push(
+                        fetch('http://localhost:5000/api/penduduk/stats', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        }),
+                        fetch('http://localhost:5000/api/apbdes/stats', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        })
+                    );
+                }
+
+                const statsResponses = await Promise.all(statsPromises);
+                const statsData = await Promise.all(statsResponses.map(r => r.json()));
+
+                // Update statistics
+                document.getElementById('surat-count').textContent = statsData[0].total || 0;
+                document.getElementById('bantuan-count').textContent = statsData[1].total || 0;
+                
+                if (isAdmin) {
+                    document.getElementById('penduduk-count').textContent = statsData[2].total || 0;
+                    document.getElementById('apbdes-amount').textContent = 
+                        new Intl.NumberFormat('id-ID', { 
+                            style: 'currency', 
+                            currency: 'IDR' 
+                        }).format(statsData[3].totalAnggaran || 0);
+                }
+
+                // Fetch recent activities
+                const activitiesResponse = await fetch('http://localhost:5000/api/activities/recent', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const activitiesData = await activitiesResponse.json();
+
+                // Update activities list
+                const activitiesContainer = document.getElementById('recent-activities');
+                if (activitiesData.length > 0) {
+                    activitiesContainer.innerHTML = activitiesData.map(activity => `
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-100">
+                                    <i class="fas ${getActivityIcon(activity.type)} text-gray-600"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">${activity.description}</p>
+                                <p class="text-sm text-gray-500">${formatDate(activity.createdAt)}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    activitiesContainer.innerHTML = '<p class="text-gray-600">Tidak ada aktivitas terbaru</p>';
+                }
+
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                alert('Terjadi kesalahan saat memuat dashboard');
+            }
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'SURAT': 'fa-envelope',
+                'BANTUAN': 'fa-hands-helping',
+                'PENDUDUK': 'fa-users',
+                'APBDES': 'fa-chart-pie',
+                'LOGIN': 'fa-sign-in-alt',
+                'LOGOUT': 'fa-sign-out-alt'
+            };
+            return icons[type] || 'fa-info-circle';
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>
