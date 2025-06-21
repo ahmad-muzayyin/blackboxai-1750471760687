@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layanan Surat - Desa Digital</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <!-- Include layout -->
+    <div id="layout-content"></div>
+
+    <!-- Surat Content -->
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Page header -->
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Layanan Surat
+                </h2>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <button type="button" id="new-request-btn"
+                    class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    <i class="fas fa-plus mr-2"></i>
+                    Ajukan Surat
+                </button>
+            </div>
+        </div>
+
+        <!-- Request Form Modal -->
+        <div id="request-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full m-4">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">Pengajuan Surat Baru</h3>
+                    </div>
+                    <form id="surat-form">
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- Jenis Surat -->
+                            <div>
+                                <label for="jenis-surat" class="block text-sm font-medium text-gray-700">Jenis Surat</label>
+                                <select id="jenis-surat" name="jenisSurat" required
+                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                                    <option value="">Pilih Jenis Surat</option>
+                                    <option value="SURAT_KETERANGAN_DOMISILI">Surat Keterangan Domisili</option>
+                                    <option value="SURAT_KETERANGAN_USAHA">Surat Keterangan Usaha</option>
+                                    <option value="SURAT_KETERANGAN_TIDAK_MAMPU">Surat Keterangan Tidak Mampu</option>
+                                    <option value="SURAT_PENGANTAR_KTP">Surat Pengantar KTP</option>
+                                    <option value="SURAT_PENGANTAR_KK">Surat Pengantar KK</option>
+                                    <option value="SURAT_KETERANGAN_KELAHIRAN">Surat Keterangan Kelahiran</option>
+                                    <option value="SURAT_KETERANGAN_KEMATIAN">Surat Keterangan Kematian</option>
+                                    <option value="SURAT_KETERANGAN_PINDAH">Surat Keterangan Pindah</option>
+                                </select>
+                            </div>
+
+                            <!-- Keperluan -->
+                            <div>
+                                <label for="keperluan" class="block text-sm font-medium text-gray-700">Keperluan</label>
+                                <textarea id="keperluan" name="keperluan" rows="3" required
+                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
+                                    placeholder="Jelaskan keperluan pengajuan surat"></textarea>
+                            </div>
+
+                            <!-- Lampiran -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Lampiran</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <i class="fas fa-upload text-gray-400 text-3xl mb-2"></i>
+                                        <div class="flex text-sm text-gray-600">
+                                            <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-gray-900 hover:text-gray-500">
+                                                <span>Upload file</span>
+                                                <input id="file-upload" name="file" type="file" class="sr-only" multiple>
+                                            </label>
+                                            <p class="pl-1">atau drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">
+                                            PNG, JPG, PDF up to 10MB
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                            <button type="button" id="cancel-request-btn"
+                                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                Batal
+                            </button>
+                            <button type="submit"
+                                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                Ajukan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Surat List -->
+        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+            <ul id="surat-list" class="divide-y divide-gray-200">
+                <!-- List items will be inserted here -->
+                <li class="text-center py-4 text-gray-500">Memuat data...</li>
+            </ul>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+            <div class="flex-1 flex justify-between sm:hidden">
+                <button id="prev-page-mobile" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Previous
+                </button>
+                <button id="next-page-mobile" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Next
+                </button>
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                        Showing <span id="page-start">1</span> to <span id="page-end">10</span> of <span id="total-items">20</span> results
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <button id="prev-page" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Previous</span>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div id="page-numbers" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                            <!-- Page numbers will be inserted here -->
+                        </div>
+                        <button id="next-page" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Next</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load layout
+        fetch('/dashboard/layout.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('layout-content').innerHTML = html;
+                // After loading layout, initialize surat page
+                initializeSuratPage();
+            });
+
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        function initializeSuratPage() {
+            // Set up event listeners
+            document.getElementById('new-request-btn').addEventListener('click', showRequestModal);
+            document.getElementById('cancel-request-btn').addEventListener('click', hideRequestModal);
+            document.getElementById('surat-form').addEventListener('submit', handleSuratSubmit);
+            document.getElementById('prev-page').addEventListener('click', () => changePage(currentPage - 1));
+            document.getElementById('next-page').addEventListener('click', () => changePage(currentPage + 1));
+            document.getElementById('prev-page-mobile').addEventListener('click', () => changePage(currentPage - 1));
+            document.getElementById('next-page-mobile').addEventListener('click', () => changePage(currentPage + 1));
+
+            // Load initial data
+            loadSuratList();
+        }
+
+        function showRequestModal() {
+            document.getElementById('request-modal').classList.remove('hidden');
+        }
+
+        function hideRequestModal() {
+            document.getElementById('request-modal').classList.add('hidden');
+            document.getElementById('surat-form').reset();
+        }
+
+        async function handleSuratSubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/surat', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Pengajuan surat berhasil');
+                    hideRequestModal();
+                    loadSuratList();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Gagal mengajukan surat');
+                }
+            } catch (error) {
+                console.error('Error submitting surat:', error);
+                alert('Terjadi kesalahan saat mengajukan surat');
+            }
+        }
+
+        async function loadSuratList() {
+            try {
+                const response = await fetch(`http://localhost:5000/api/surat?page=${currentPage}&limit=${itemsPerPage}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                const suratList = document.getElementById('surat-list');
+                
+                if (data.items.length === 0) {
+                    suratList.innerHTML = '<li class="text-center py-4 text-gray-500">Tidak ada pengajuan surat</li>';
+                    return;
+                }
+
+                suratList.innerHTML = data.items.map(surat => `
+                    <li>
+                        <div class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <p class="text-sm font-medium text-gray-900">
+                                        ${formatJenisSurat(surat.jenisSurat)}
+                                    </p>
+                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(surat.status)}">
+                                        ${formatStatus(surat.status)}
+                                    </span>
+                                </div>
+                                <div class="ml-2 flex-shrink-0 flex">
+                                    <p class="text-sm text-gray-500">
+                                        ${new Date(surat.createdAt).toLocaleDateString('id-ID')}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-2 sm:flex sm:justify-between">
+                                <div class="sm:flex">
+                                    <p class="text-sm text-gray-500">
+                                        ${surat.keperluan}
+                                    </p>
+                                </div>
+                                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                    <button onclick="viewDetail('${surat.id}')" class="text-gray-900 hover:text-gray-800">
+                                        <i class="fas fa-eye mr-1"></i> Detail
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                `).join('');
+
+                // Update pagination
+                updatePagination(data.total);
+
+            } catch (error) {
+                console.error('Error loading surat list:', error);
+                alert('Terjadi kesalahan saat memuat daftar surat');
+            }
+        }
+
+        function updatePagination(total) {
+            const totalPages = Math.ceil(total / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, total);
+
+            document.getElementById('page-start').textContent = start;
+            document.getElementById('page-end').textContent = end;
+            document.getElementById('total-items').textContent = total;
+
+            // Update page numbers
+            const pageNumbers = document.getElementById('page-numbers');
+            pageNumbers.innerHTML = '';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.className = `relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${i === currentPage ? 'text-gray-900 bg-gray-100' : 'text-gray-700 hover:bg-gray-50'}`;
+                button.textContent = i;
+                button.onclick = () => changePage(i);
+                pageNumbers.appendChild(button);
+            }
+
+            // Update button states
+            document.getElementById('prev-page').disabled = currentPage === 1;
+            document.getElementById('next-page').disabled = currentPage === totalPages;
+            document.getElementById('prev-page-mobile').disabled = currentPage === 1;
+            document.getElementById('next-page-mobile').disabled = currentPage === totalPages;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            loadSuratList();
+        }
+
+        function formatJenisSurat(jenis) {
+            return jenis.split('_').map(word => 
+                word.charAt(0) + word.slice(1).toLowerCase()
+            ).join(' ');
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'PENDING': 'Menunggu',
+                'PROCESSING': 'Diproses',
+                'APPROVED': 'Disetujui',
+                'REJECTED': 'Ditolak',
+                'COMPLETED': 'Selesai'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusColor(status) {
+            const colorMap = {
+                'PENDING': 'bg-yellow-100 text-yellow-800',
+                'PROCESSING': 'bg-blue-100 text-blue-800',
+                'APPROVED': 'bg-green-100 text-green-800',
+                'REJECTED': 'bg-red-100 text-red-800',
+                'COMPLETED': 'bg-gray-100 text-gray-800'
+            };
+            return colorMap[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        function viewDetail(id) {
+            // TODO: Implement surat detail view
+            alert('Detail surat dengan ID: ' + id);
+        }
+    </script>
+</body>
+</html>
