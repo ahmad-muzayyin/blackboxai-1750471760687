@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: desa-digital-backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-5000}:5000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME:-desa_digital}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-rootpassword}
+      - REDIS_HOST=redis
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+      - ./logs:/usr/src/app/logs
+      - ./backups:/usr/src/app/backups
+    depends_on:
+      - db
+      - redis
+    networks:
+      - desa-network
+
+  db:
+    image: mysql:8.0
+    container_name: desa-digital-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-rootpassword}
+      - MYSQL_DATABASE=${DB_NAME:-desa_digital}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - desa-network
+
+  redis:
+    image: redis:alpine
+    container_name: desa-digital-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - desa-network
+
+  adminer:
+    image: adminer
+    container_name: desa-digital-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - desa-network
+
+volumes:
+  mysql-data:
+  redis-data:
+
+networks:
+  desa-network:
+    driver: bridge
+
+# Development services (commented out for production)
+#  mailhog:
+#    image: mailhog/mailhog
+#    container_name: desa-digital-mailhog
+#    ports:
+#      - "1025:1025"
+#      - "8025:8025"
+#    networks:
+#      - desa-network
+
+#  test-db:
+#    image: mysql:8.0
+#    container_name: desa-digital-test-db
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=test
+#      - MYSQL_DATABASE=desa_digital_test
+#    ports:
+#      - "3307:3306"
+#    networks:
+#      - desa-network
